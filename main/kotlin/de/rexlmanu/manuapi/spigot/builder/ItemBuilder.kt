@@ -3,31 +3,18 @@
  */
 package de.rexlmanu.manuapi.spigot.builder
 
-import de.rexlmanu.manuapi.kotlin.interfaces.Builder;
-import org.bukkit.inventory.ItemStack
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack.setItemMeta
-import java.util.UUID
-import com.mojang.authlib.GameProfile
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack.getItemMeta
-import org.bukkit.inventory.meta.ItemMeta
-import java.nio.file.Files.setOwner
-import org.bukkit.inventory.meta.SkullMeta
-import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.potion.PotionEffectType
-import org.bukkit.potion.PotionEffect
-import org.bukkit.inventory.meta.MapMeta
-import org.bukkit.inventory.meta.LeatherArmorMeta
-import org.bukkit.inventory.meta.FireworkMeta
-import org.bukkit.FireworkEffect
-import org.bukkit.inventory.meta.FireworkEffectMeta
-import org.bukkit.inventory.meta.BookMeta
-import org.bukkit.inventory.meta.BlockStateMeta
-import org.apache.commons.lang3.StringUtils.removePattern
-import org.bukkit.inventory.meta.BannerMeta
+import de.rexlmanu.manuapi.kotlin.interfaces.Builder
+import org.bukkit.Color
 import org.bukkit.DyeColor
+import org.bukkit.FireworkEffect
+import org.bukkit.Material
+import org.bukkit.block.banner.Pattern
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
-import java.util.Collections.singletonList
-
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.*
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 
 /******************************************************************************************
@@ -44,150 +31,143 @@ import java.util.Collections.singletonList
  *    bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  ******************************************************************************************/
 
-@Getter
-class ItemBuilder : Builder<ItemStack> {
-    private val itemStack: ItemStack
+class ItemBuilder(private val itemStack: ItemStack) : Builder<ItemStack> {
+
 
     /*CREATE*/
-    constructor(itemStack: ItemStack) {
-        this.itemStack = itemStack
-    }
+    constructor(material: Material) : this(ItemStack(material))
 
-    constructor(@NonNull material: Material) {
-        this.itemStack = ItemStack(material)
-    }
+    constructor(material: Material, amount: Int) : this(ItemStack(material, amount))
 
-    constructor(@NonNull material: Material, amount: Int) {
-        this.itemStack = ItemStack(material, amount)
-    }
+    constructor(material: Material, damage: Short) : this(ItemStack(material, 1, damage))
 
-    constructor(@NonNull material: Material, damage: Short) {
-        this.itemStack = ItemStack(material, 1, damage)
-    }
-
-    constructor(@NonNull material: Material, amount: Int, damage: Short) {
-        this.itemStack = ItemStack(material, amount, damage)
-    }
+    constructor(material: Material, amount: Int, damage: Short) : this(ItemStack(material, amount, damage))
     /*CREATE*/
 
     /*ItemStack Setter*/
     fun setMaterial(material: Material): ItemBuilder {
-        getItemStack().setType(material)
+        itemStack.type = material
         return this
     }
 
     fun setType(material: Material): ItemBuilder {
-        getItemStack().setType(material)
+        itemStack.type = material
         return this
     }
 
     fun setAmount(amount: Int): ItemBuilder {
-        getItemStack().setAmount(amount)
+        itemStack.amount = amount
         return this
     }
 
     fun setDamage(damage: Short): ItemBuilder {
-        getItemStack().setDurability(damage)
+        itemStack.durability = damage
         return this
     }
 
     fun setDurability(durability: Short): ItemBuilder {
-        getItemStack().setDurability(durability)
+        itemStack.durability = durability
         return this
     }
     /*ItemStack Setter*/
 
     /*ItemStack Add*/
     fun addEnchantment(enchantment: Enchantment, level: Int): ItemBuilder {
-        getItemStack().addEnchantment(enchantment, level)
+        itemStack.addEnchantment(enchantment, level)
         return this
     }
 
     fun addEnchantments(enchantments: Map<Enchantment, Int>): ItemBuilder {
-        getItemStack().addEnchantments(enchantments)
+        itemStack.addEnchantments(enchantments)
         return this
     }
 
     fun addUnsafeEnchantment(enchantment: Enchantment, level: Int): ItemBuilder {
-        getItemStack().addUnsafeEnchantment(enchantment, level)
+        itemStack.addUnsafeEnchantment(enchantment, level)
         return this
     }
 
     fun addUnsafeEnchantments(enchantments: Map<Enchantment, Int>): ItemBuilder {
-        getItemStack().addUnsafeEnchantments(enchantments)
+        itemStack.addUnsafeEnchantments(enchantments)
         return this
     }
 
     fun addLore(lore: List<String>): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getLore().addAll(lore)
-        itemMeta.setLore(itemMeta.getLore())
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        if (itemMeta.lore === null) itemMeta.lore = mutableListOf()
+        itemMeta.lore.addAll(lore)
+        itemMeta.lore = itemMeta.lore
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun addLore(i: Int, lore: List<String>): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getLore().addAll(i, lore)
-        itemMeta.setLore(itemMeta.getLore())
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        if (itemMeta.lore === null) itemMeta.lore = mutableListOf()
+        itemMeta.lore.addAll(i, lore)
+        itemMeta.lore = itemMeta.lore
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun addLore(lore: String): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getLore().add(lore)
-        itemMeta.setLore(itemMeta.getLore())
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        if (itemMeta.lore === null) itemMeta.lore = mutableListOf()
+        itemMeta.lore.add(lore)
+        itemMeta.lore = itemMeta.lore
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun addLore(i: Int, lore: String): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getLore().add(i, lore)
-        itemMeta.setLore(itemMeta.getLore())
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        if (itemMeta.lore === null) itemMeta.lore = mutableListOf()
+        itemMeta.lore.add(i, lore)
+        itemMeta.lore = itemMeta.lore
+        itemStack.itemMeta = itemMeta
         return this
     }
     /*ItemStack Add*/
 
     /*ItemStack Remove*/
     fun removeEnchantment(enchantment: Enchantment): ItemBuilder {
-        getItemStack().removeEnchantment(enchantment)
+        itemStack.removeEnchantment(enchantment)
         return this
     }
 
     fun removeLore(lore: List<String>): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getLore().removeAll(lore)
-        itemMeta.setLore(itemMeta.getLore())
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        if (itemMeta.lore === null) itemMeta.lore = mutableListOf()
+        itemMeta.lore.removeAll(lore)
+        itemMeta.lore = itemMeta.lore
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun removeLore(i: Int): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getLore().removeAt(i)
-        itemMeta.setLore(itemMeta.getLore())
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        if (itemMeta.lore === null) itemMeta.lore = mutableListOf()
+        itemMeta.lore.removeAt(i)
+        itemMeta.lore = itemMeta.lore
+        itemStack.itemMeta = itemMeta
         return this
     }
     /*ItemStack Remove*/
 
     /*
-     *ItemMeta Setter
-     */
+	 *ItemMeta Setter
+	 */
     fun setLore(lore: List<String>): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.setLore(lore)
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.lore = lore
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun setLore(lore: String): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.setLore(Collections.singletonList(lore))
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.lore = listOf(lore)
+        itemStack.itemMeta = itemMeta
         return this
     }
 
@@ -195,125 +175,126 @@ class ItemBuilder : Builder<ItemStack> {
         return setDisplayName(name)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setDisplayName(displayName: String): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.setDisplayName(displayName)
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.displayName = displayName
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun setBreakable(): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.spigot().setUnbreakable(false)
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.spigot().isUnbreakable = false
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun setUnbreakable(): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.spigot().setUnbreakable(true)
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.spigot().isUnbreakable = true
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun setUnbreakable(unbreakable: Boolean): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.spigot().setUnbreakable(unbreakable)
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.spigot().isUnbreakable = unbreakable
+        itemStack.itemMeta = itemMeta
         return this
     }
     /*
-     *ItemMeta Setter
-     */
+	 *ItemMeta Setter
+	 */
 
     /*
-     *ItemMeta Add
-     */
+	 *ItemMeta Add
+	 */
     fun addEnchant(enchantment: Enchantment, level: Int): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
+        val itemMeta = itemStack.itemMeta
         itemMeta.addEnchant(enchantment, level, true)
-        getItemStack().setItemMeta(itemMeta)
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun addEnchant(enchantment: Enchantment, level: Int, ignoreLevelRestriction: Boolean): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
+        val itemMeta = itemStack.itemMeta
         itemMeta.addEnchant(enchantment, level, ignoreLevelRestriction)
-        getItemStack().setItemMeta(itemMeta)
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun addItemFlags(vararg itemFlags: ItemFlag): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
+        val itemMeta = itemStack.itemMeta
         itemMeta.addItemFlags(*itemFlags)
-        getItemStack().setItemMeta(itemMeta)
+        itemStack.itemMeta = itemMeta
         return this
     }
     /*
-     *ItemMeta Add
-     */
+	 *ItemMeta Add
+	 */
 
     /*
-     *ItemMeta Remove
-     */
+	 *ItemMeta Remove
+	 */
     fun removeEnchant(enchantment: Enchantment): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
+        val itemMeta = itemStack.itemMeta
         itemMeta.removeEnchant(enchantment)
-        getItemStack().setItemMeta(itemMeta)
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun removeItemFlags(vararg itemFlags: ItemFlag): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
+        val itemMeta = itemStack.itemMeta
         itemMeta.removeItemFlags(*itemFlags)
-        getItemStack().setItemMeta(itemMeta)
+        itemStack.itemMeta = itemMeta
         return this
     }
     /*
-     *ItemMeta Remove
-     */
+	 *ItemMeta Remove
+	 */
 
     /*
-     *ItemMeta Clear
-     */
+	 *ItemMeta Clear
+	 */
     fun clearEnchants(): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getEnchants().clear()
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.enchants.clear()
+        itemStack.itemMeta = itemMeta
         return this
     }
 
     fun clearItemFlags(): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
-        itemMeta.getItemFlags().clear()
-        getItemStack().setItemMeta(itemMeta)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.itemFlags.clear()
+        itemStack.itemMeta = itemMeta
         return this
     }
     /*
-     *ItemMeta Clear
-     */
+	 *ItemMeta Clear
+	 */
 
     /*
-     *ItemMeta Hide
-     */
+	 *ItemMeta Hide
+	 */
     fun hideItemFlags(): ItemBuilder {
-        val itemMeta = getItemStack().getItemMeta()
+        val itemMeta = itemStack.itemMeta
         itemMeta.addItemFlags(*ItemFlag.values())
-        getItemStack().setItemMeta(itemMeta)
+        itemStack.itemMeta = itemMeta
         return this
     }
     /*
-     *ItemMeta Hide
-     */
+	 *ItemMeta Hide
+	 */
 
     /*
-     *BannerMeta Setter
-     */
+	 *BannerMeta Setter
+	 */
     fun setBaseColor(dyeColor: DyeColor): ItemBuilder {
         try {
-            val bannerMeta = getItemStack().getItemMeta() as BannerMeta
+            val bannerMeta = itemStack.itemMeta as BannerMeta
             bannerMeta.baseColor = dyeColor
-            getItemStack().setItemMeta(bannerMeta)
+            itemStack.itemMeta = bannerMeta
         } catch (ignored: ClassCastException) {
         }
 
@@ -322,9 +303,9 @@ class ItemBuilder : Builder<ItemStack> {
 
     fun setPatterns(patterns: List<Pattern>): ItemBuilder {
         try {
-            val bannerMeta = getItemStack().getItemMeta() as BannerMeta
+            val bannerMeta = itemStack.itemMeta as BannerMeta
             bannerMeta.patterns = patterns
-            getItemStack().setItemMeta(bannerMeta)
+            itemStack.itemMeta = bannerMeta
         } catch (ignored: ClassCastException) {
         }
 
@@ -333,77 +314,76 @@ class ItemBuilder : Builder<ItemStack> {
 
     fun setPattern(i: Int, pattern: Pattern): ItemBuilder {
         try {
-            val bannerMeta = getItemStack().getItemMeta() as BannerMeta
+            val bannerMeta = itemStack.itemMeta as BannerMeta
             bannerMeta.setPattern(i, pattern)
-            getItemStack().setItemMeta(bannerMeta)
+            itemStack.itemMeta = bannerMeta
         } catch (ignored: ClassCastException) {
         }
 
         return this
     }
     /*
-     *BannerMeta Setter
-     */
+	 *BannerMeta Setter
+	 */
 
     /*
-     *BannerMeta Add
-     */
+	 *BannerMeta Add
+	 */
     fun addPattern(pattern: Pattern): ItemBuilder {
         try {
-            val bannerMeta = getItemStack().getItemMeta() as BannerMeta
+            val bannerMeta = itemStack.itemMeta as BannerMeta
             bannerMeta.addPattern(pattern)
-            getItemStack().setItemMeta(bannerMeta)
+            itemStack.itemMeta = bannerMeta
         } catch (ignored: ClassCastException) {
         }
 
         return this
     }
     /*
-     *BannerMeta Add
-     */
+	 *BannerMeta Add
+	 */
 
     /*
-     *BannerMeta Remove
-     */
+	 *BannerMeta Remove
+	 */
     fun removePattern(i: Int): ItemBuilder {
         try {
-            val bannerMeta = getItemStack().getItemMeta() as BannerMeta
+            val bannerMeta = itemStack.itemMeta as BannerMeta
             bannerMeta.removePattern(i)
-            getItemStack().setItemMeta(bannerMeta)
+            itemStack.itemMeta = bannerMeta
         } catch (ignored: ClassCastException) {
         }
 
         return this
     }
     /*
-     *BannerMeta Remove
-     */
+	 *BannerMeta Remove
+	 */
 
     /*
-     *BlockStateMeta Setter
-     */
-    fun setBlockState(blockState: BlockState): ItemBuilder {
+	 *BlockStateMeta Setter
+	 */
+    fun setBlockState(blockState: org.bukkit.block.BlockState): ItemBuilder {
         try {
-            val blockStateMeta = getItemStack().getItemMeta() as BlockStateMeta
+            val blockStateMeta = itemStack.itemMeta as BlockStateMeta
             blockStateMeta.blockState = blockState
-            getItemStack().setItemMeta(blockStateMeta)
+            itemStack.itemMeta = blockStateMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *BlockStateMeta Setter
-     */
+	 *BlockStateMeta Setter
+	 */
 
     /*
-     *BookMeta Setter
-     */
+	 *BookMeta Setter
+	 */
     fun setTitle(title: String): ItemBuilder {
         try {
-            val bookMeta = getItemStack().getItemMeta() as BookMeta
+            val bookMeta = itemStack.itemMeta as BookMeta
             bookMeta.title = title
-            getItemStack().setItemMeta(bookMeta)
+            itemStack.itemMeta = bookMeta
         } catch (ignored: ClassCastException) {
         }
 
@@ -412,115 +392,108 @@ class ItemBuilder : Builder<ItemStack> {
 
     fun setAuthor(author: String): ItemBuilder {
         try {
-            val bookMeta = getItemStack().getItemMeta() as BookMeta
+            val bookMeta = itemStack.itemMeta as BookMeta
             bookMeta.author = author
-            getItemStack().setItemMeta(bookMeta)
+            itemStack.itemMeta = bookMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
 
     fun setPage(i: Int, page: String): ItemBuilder {
         try {
-            val bookMeta = getItemStack().getItemMeta() as BookMeta
+            val bookMeta = itemStack.itemMeta as BookMeta
             bookMeta.setPage(i, page)
-            getItemStack().setItemMeta(bookMeta)
+            itemStack.itemMeta = bookMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
 
     fun setPages(pages: List<String>): ItemBuilder {
         try {
-            val bookMeta = getItemStack().getItemMeta() as BookMeta
+            val bookMeta = itemStack.itemMeta as BookMeta
             bookMeta.pages = pages
-            getItemStack().setItemMeta(bookMeta)
+            itemStack.itemMeta = bookMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
 
     fun setPages(vararg pages: String): ItemBuilder {
         try {
-            val bookMeta = getItemStack().getItemMeta() as BookMeta
+            val bookMeta = itemStack.itemMeta as BookMeta
             bookMeta.setPages(*pages)
-            getItemStack().setItemMeta(bookMeta)
+            itemStack.itemMeta = bookMeta
         } catch (ignored: ClassCastException) {
         }
 
         return this
     }
     /*
-     *BookMeta Setter
-     */
+	 *BookMeta Setter
+	 */
 
     /*
-     *BookMeta Add
-     */
+	 *BookMeta Add
+	 */
     fun addPage(vararg page: String): ItemBuilder {
         try {
-            val bookMeta = getItemStack().getItemMeta() as BookMeta
+            val bookMeta = itemStack.itemMeta as BookMeta
             bookMeta.addPage(*page)
-            getItemStack().setItemMeta(bookMeta)
+            itemStack.itemMeta = bookMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *BookMeta Add
-     */
+	 *BookMeta Add
+	 */
 
     /*
-     *FireworkEffectMeta Setter
-     */
+	 *FireworkEffectMeta Setter
+	 */
     fun setFireworkEffectMetaEffect(fireworkEffect: FireworkEffect): ItemBuilder {
         try {
-            val fireworkEffectMeta = getItemStack().getItemMeta() as FireworkEffectMeta
+            val fireworkEffectMeta = itemStack.itemMeta as FireworkEffectMeta
             fireworkEffectMeta.effect = fireworkEffect
-            getItemStack().setItemMeta(fireworkEffectMeta)
+            itemStack.itemMeta = fireworkEffectMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *FireworkEffectMeta Setter
-     */
+	 *FireworkEffectMeta Setter
+	 */
 
     /*
-     *FireworkMeta Setter
-     */
+	 *FireworkMeta Setter
+	 */
     fun setFireworkMetaEffect(fireworkEffect: FireworkEffect): ItemBuilder {
         try {
-            val fireworkMeta = getItemStack().getItemMeta() as FireworkMeta
+            val fireworkMeta = itemStack.itemMeta as FireworkMeta
             fireworkMeta.addEffect(fireworkEffect)
-            getItemStack().setItemMeta(fireworkMeta)
+            itemStack.itemMeta = fireworkMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
 
     fun setFireworkMetaEffect(vararg fireworkEffect: FireworkEffect): ItemBuilder {
         try {
-            val fireworkMeta = getItemStack().getItemMeta() as FireworkMeta
+            val fireworkMeta = itemStack.itemMeta as FireworkMeta
             fireworkMeta.addEffects(*fireworkEffect)
-            getItemStack().setItemMeta(fireworkMeta)
+            itemStack.itemMeta = fireworkMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
 
     fun setFireworkMetaEffect(fireworkEffect: Iterable<FireworkEffect>): ItemBuilder {
         try {
-            val fireworkMeta = getItemStack().getItemMeta() as FireworkMeta
+            val fireworkMeta = itemStack.itemMeta as FireworkMeta
             fireworkMeta.addEffects(fireworkEffect)
-            getItemStack().setItemMeta(fireworkMeta)
+            itemStack.itemMeta = fireworkMeta
         } catch (ignored: ClassCastException) {
         }
 
@@ -529,197 +502,173 @@ class ItemBuilder : Builder<ItemStack> {
 
     fun setPower(power: Int): ItemBuilder {
         try {
-            val fireworkMeta = getItemStack().getItemMeta() as FireworkMeta
+            val fireworkMeta = itemStack.itemMeta as FireworkMeta
             fireworkMeta.power = power
-            getItemStack().setItemMeta(fireworkMeta)
+            itemStack.itemMeta = fireworkMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *FireworkMeta Setter
-     */
+	 *FireworkMeta Setter
+	 */
 
     /*
-     *FireworkMeta Remove
-     */
+	 *FireworkMeta Remove
+	 */
     fun removeEffect(effect: Int): ItemBuilder {
         try {
-            val fireworkMeta = getItemStack().getItemMeta() as FireworkMeta
+            val fireworkMeta = itemStack.itemMeta as FireworkMeta
             fireworkMeta.removeEffect(effect)
-            getItemStack().setItemMeta(fireworkMeta)
+            itemStack.itemMeta = fireworkMeta
         } catch (ignored: ClassCastException) {
         }
 
         return this
     }
     /*
-     *FireworkMeta Remove
-     */
+	 *FireworkMeta Remove
+	 */
 
     /*
-     *FireworkMeta Clear
-     */
+	 *FireworkMeta Clear
+	 */
     fun clearEffects(): ItemBuilder {
         try {
-            val fireworkMeta = getItemStack().getItemMeta() as FireworkMeta
+            val fireworkMeta = itemStack.itemMeta as FireworkMeta
             fireworkMeta.clearEffects()
-            getItemStack().setItemMeta(fireworkMeta)
+            itemStack.itemMeta = fireworkMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *FireworkMeta Clear
-     */
+	 *FireworkMeta Clear
+	 */
 
     /*
-     *LeatherArmorMeta Setter
-     */
+	 *LeatherArmorMeta Setter
+	 */
     fun setColor(color: Color): ItemBuilder {
         try {
-            val leatherArmorMeta = getItemStack().getItemMeta() as LeatherArmorMeta
+            val leatherArmorMeta = itemStack.itemMeta as LeatherArmorMeta
             leatherArmorMeta.color = color
-            getItemStack().setItemMeta(leatherArmorMeta)
+            itemStack.itemMeta = leatherArmorMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *LeatherArmorMeta Setter
-     */
+	 *LeatherArmorMeta Setter
+	 */
 
     /*
-     *MapMeta Setter
-     */
+	 *MapMeta Setter
+	 */
     fun setScaling(value: Boolean): ItemBuilder {
         try {
-            val mapMeta = getItemStack().getItemMeta() as MapMeta
+            val mapMeta = itemStack.itemMeta as MapMeta
             mapMeta.isScaling = value
-            getItemStack().setItemMeta(mapMeta)
+            itemStack.itemMeta = mapMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *MapMeta Setter
-     */
+	 *MapMeta Setter
+	 */
 
     /*
-     *PotionMeta Setter
-     */
+	 *PotionMeta Setter
+	 */
     fun setMainEffect(potionEffectType: PotionEffectType): ItemBuilder {
         try {
-            val potionMeta = getItemStack().getItemMeta() as PotionMeta
+            val potionMeta = itemStack.itemMeta as PotionMeta
             potionMeta.setMainEffect(potionEffectType)
-            getItemStack().setItemMeta(potionMeta)
+            itemStack.itemMeta = potionMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *PotionMeta Setter
-     */
+	 *PotionMeta Setter
+	 */
 
     /*
-     *PotionMeta Add
-     */
+	 *PotionMeta Add
+	 */
     fun addCustomEffect(potionEffect: PotionEffect, overwrite: Boolean): ItemBuilder {
         try {
-            val potionMeta = getItemStack().getItemMeta() as PotionMeta
+            val potionMeta = itemStack.itemMeta as PotionMeta
             potionMeta.addCustomEffect(potionEffect, overwrite)
-            getItemStack().setItemMeta(potionMeta)
+            itemStack.itemMeta = potionMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *PotionMeta Add
-     */
+	 *PotionMeta Add
+	 */
 
     /*
-     *PotionMeta Remove
-     */
+	 *PotionMeta Remove
+	 */
     fun removeCustomEffect(potionEffectType: PotionEffectType): ItemBuilder {
         try {
-            val potionMeta = getItemStack().getItemMeta() as PotionMeta
+            val potionMeta = itemStack.itemMeta as PotionMeta
             potionMeta.removeCustomEffect(potionEffectType)
-            getItemStack().setItemMeta(potionMeta)
+            itemStack.itemMeta = potionMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *PotionMeta Remove
-     */
+	 *PotionMeta Remove
+	 */
 
     /*
-     *PotionMeta Clear
-     */
+	 *PotionMeta Clear
+	 */
     fun clearCustomEffects(): ItemBuilder {
         try {
-            val potionMeta = getItemStack().getItemMeta() as PotionMeta
+            val potionMeta = itemStack.itemMeta as PotionMeta
             potionMeta.clearCustomEffects()
-            getItemStack().setItemMeta(potionMeta)
+            itemStack.itemMeta = potionMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *PotionMeta Clear
-     */
+	 *PotionMeta Clear
+	 */
 
     /*
-     *SkullMeta Setter
-     */
+	 *SkullMeta Setter
+	 */
     fun setOwner(owner: String): ItemBuilder {
         try {
-            val skullMeta = getItemStack().getItemMeta() as SkullMeta
+            val skullMeta = itemStack.itemMeta as SkullMeta
             skullMeta.owner = owner
-            getItemStack().setItemMeta(skullMeta)
+            itemStack.itemMeta = skullMeta
         } catch (ignored: ClassCastException) {
         }
-
         return this
     }
     /*
-     *SkullMeta Setter
-     */
-
-    fun setOwnerFromURL(@NonNull url: String, @NonNull name: String): ItemBuilder {
-        try {
-            if (!url.isEmpty()) {
-                val itemMeta = getItemStack().getItemMeta()
-                val gameProfile = GameProfile(UUID.randomUUID(), name)
-                gameProfile.properties.put("textures", Property("textures", String(Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).toByteArray()))))
-                ReflectUtils.setValue(itemMeta, "profile", gameProfile)
-                getItemStack().setItemMeta(itemMeta)
-            }
-        } catch (ignored: ClassCastException) {
-        }
-
-        return this
-    }
+	 *SkullMeta Setter
+	 */
 
     /*
-     *Extras
-     */
+	 *Extras
+	 */
     fun clone(): ItemBuilder {
-        return ItemBuilder(getItemStack().clone())
+        return ItemBuilder(itemStack.clone())
     }
 
-    fun build(): ItemStack {
-        return getItemStack()
+    override fun build(): ItemStack {
+        return itemStack
     }
     /*
-     *Extras
-     */
+	 *Extras
+	 */
 }
