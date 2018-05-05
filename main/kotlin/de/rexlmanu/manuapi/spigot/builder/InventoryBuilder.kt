@@ -31,13 +31,16 @@ class InventoryBuilder(title: String, row: Int) : Builder<Inventory> {
     private val inventory: Inventory = Bukkit.createInventory(null, row * 9, title)
 
     fun fillGlass() {
-        this.fillWith(ItemBuilder(Material.STAINED_GLASS_PANE, 1, 15).setName("§r").build())
+        this.replaceWith(ItemBuilder(Material.STAINED_GLASS_PANE, 1, 15).setName("§r").build())
     }
 
-    fun fillWith(itemStack: ItemStack) {
-        for (i in 0..inventory.size) {
+    fun addItem(itemStack: ItemStack) {
+        this.inventory.addItem(itemStack)
+    }
+
+    fun replaceWith(itemStack: ItemStack) {
+        for (i in 0..inventory.size)
             setItem(i, itemStack)
-        }
     }
 
     fun setItem(slot: Int, itemStack: ItemStack) {

@@ -1,15 +1,18 @@
 /*
  * © Copyright - Emmanuel Lampe aka. rexlManu 2018.
  */
-package de.rexlmanu.manuapi.spigot.config
+package de.rexlmanu.manuapi.spigot.config.json
 
 import com.google.gson.GsonBuilder
+import de.rexlmanu.manuapi.spigot.config.IConfig
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 import java.io.File
 import java.io.FileWriter
 import java.nio.file.Files
 
+@Suppress("ReplaceGetOrSet")
+open
 /******************************************************************************************
  * Urheberrechtshinweis
  * Copyright © Emmanuel Lampe 2018
@@ -43,31 +46,24 @@ class JsonConfig(directory: File, fileName: String) : IConfig {
         fileWriter.close()
     }
 
-    private fun formatJson(jsonContent: String): String {
-        return GsonBuilder().setPrettyPrinting().create().toJson(jsonContent)
-    }
+    private fun formatJson(jsonContent: String): String = GsonBuilder().setPrettyPrinting().create().toJson(jsonContent)
 
-    override fun reloadConfig() {
-        loadConfig()
-    }
 
-    override fun getObject(key: String): Any {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun reloadConfig() = loadConfig()
+
+
+    override fun getObject(key: String): Any = this.jsonObject.get(key)!!
+
 
     override fun insertObject(key: String, any: Any) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.jsonObject[key] = any
     }
 
-    override fun getString(key: String): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getString(key: String): String = getObject(key) as String
 
-    override fun getBoolean(key: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun getNumber(key: String): Number {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getBoolean(key: String): Boolean = getObject(key) as Boolean
+
+
+    override fun getNumber(key: String): Number = getObject(key) as Number
 }
