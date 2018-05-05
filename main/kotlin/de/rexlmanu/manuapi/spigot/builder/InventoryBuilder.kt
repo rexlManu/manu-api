@@ -3,7 +3,6 @@
  */
 package de.rexlmanu.manuapi.spigot.builder
 
-import de.rexlmanu.manuapi.kotlin.interfaces.Builder
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -25,35 +24,35 @@ import org.bukkit.inventory.ItemStack
  *    bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  ******************************************************************************************/
 
-class InventoryBuilder(title: String, row: Int) : Builder<Inventory> {
+class InventoryBuilder(title: String, row: Int) : IInvetoryBuilder {
 
 
     private val inventory: Inventory = Bukkit.createInventory(null, row * 9, title)
 
-    fun fillGlass() {
+    override fun fillGlass() {
         this.replaceWith(ItemBuilder(Material.STAINED_GLASS_PANE, 1, 15).setName("§r").build())
     }
 
-    fun addItem(itemStack: ItemStack) {
+    override fun addItem(itemStack: ItemStack) {
         this.inventory.addItem(itemStack)
     }
 
-    fun replaceWith(itemStack: ItemStack) {
+    override fun replaceWith(itemStack: ItemStack) {
         for (i in 0..inventory.size)
             setItem(i, itemStack)
     }
 
-    fun setItem(slot: Int, itemStack: ItemStack) {
+    override fun setItem(slot: Int, itemStack: ItemStack) {
         this.inventory.setItem(slot, itemStack)
     }
 
-    fun setItem(x: Int, y: Int, itemStack: ItemStack) {
+    override fun setItem(x: Int, y: Int, itemStack: ItemStack) {
         this.setItem(x * y, itemStack)
     }
 
     override fun build(): Inventory = inventory
 
-    fun openInventory(player: Player) {
+    override fun openInventory(player: Player) {
         player.openInventory(build())
     }
 }

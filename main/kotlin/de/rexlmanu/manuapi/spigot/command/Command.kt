@@ -4,7 +4,6 @@
 package de.rexlmanu.manuapi.spigot.command
 
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.PluginCommand
 import org.bukkit.command.TabCompleter
@@ -33,7 +32,7 @@ abstract class Command(val javaPlugin: JavaPlugin,
                        val usage: String = "",
                        val minLength: Int = 0,
                        val maxLength: Int = 0,
-                       tabCompleter: TabCompleter? = null) : CommandExecutor {
+                       tabCompleter: TabCompleter? = null) : ICommand {
 
     init {
         val command: PluginCommand? = javaPlugin.getCommand(commandName)
@@ -57,16 +56,15 @@ abstract class Command(val javaPlugin: JavaPlugin,
         return true
     }
 
-    abstract fun perform(sender: CommandSender, args: Array<String>)
+    abstract override fun perform(sender: CommandSender, args: Array<String>)
 
+    override fun isPlayer(sender: CommandSender, lambda: (Player) -> Unit) = if (sender is Player) lambda(sender) else sender.sendMessage("Der Command ist nur für Spieler")
 
-    fun isPlayer(sender: CommandSender, lambda: (Player) -> Unit) = if (sender is Player) lambda(sender) else sender.sendMessage("Der Command ist nur für Spieler")
+    override fun getTarget(sender: CommandSender, player: Player?, lambda: (Player) -> Unit) = if (player != null) lambda(player) else sender.sendMessage("§cDer Spieler ist nicht Online")
 
-    fun getTarget(sender: CommandSender, player: Player?, lambda: (Player) -> Unit) = if (player != null) lambda(player) else sender.sendMessage("§cDer Spieler ist nicht Online")
+    override fun getTarget(sender: CommandSender, uuid: UUID, lambda: (Player) -> Unit) = getTarget(sender, Bukkit.getPlayer(uuid), lambda)
 
-    fun getTarget(sender: CommandSender, uuid: UUID, lambda: (Player) -> Unit) = getTarget(sender, Bukkit.getPlayer(uuid), lambda)
+    override fun getTarget(sender: CommandSender, name: String, lambda: (Player) -> Unit) = getTarget(sender, Bukkit.getPlayer(name), lambda)
 
-    fun getTarget(sender: CommandSender, name: String, lambda: (Player) -> Unit) = getTarget(sender, Bukkit.getPlayer(name), lambda)
-
-    fun sendUseMessage(sender: CommandSender) = sender.sendMessage("§7Nutze: §8/$commandName §7$usage")
+    override fun sendUseMessage(sender: CommandSender) = sender.sendMessage("§7Nutze: §8/$commandName §7$usage")
 }
