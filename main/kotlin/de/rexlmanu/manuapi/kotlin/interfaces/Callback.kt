@@ -1,15 +1,13 @@
 /*
  * © Copyright - Emmanuel Lampe aka. rexlManu 2018.
  */
-package de.rexlmanu.manuapi
-
-import org.bukkit.plugin.java.JavaPlugin
+package de.rexlmanu.manuapi.kotlin.interfaces
 
 
 /******************************************************************************************
  *    Urheberrechtshinweis
  *    Copyright © Emmanuel Lampe 2018
- *    Erstellt: 05.05.2018 / 14:09
+ *    Erstellt: 05.05.2018 / 14:23
  *
  *    Alle Inhalte dieses Quelltextes sind urheberrechtlich geschützt.
  *    Das Urheberrecht liegt, soweit nicht ausdrücklich anders gekennzeichnet,
@@ -20,5 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin
  *    bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  ******************************************************************************************/
 
-class ManuAPI {
+interface Callback {
+
+    fun call()
 }
