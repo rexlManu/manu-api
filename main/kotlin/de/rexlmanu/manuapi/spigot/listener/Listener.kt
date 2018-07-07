@@ -25,7 +25,12 @@ import org.bukkit.plugin.java.JavaPlugin
 open class Listener(private val javaPlugin: JavaPlugin, private val pluginManager: PluginManager = Bukkit.getPluginManager()) : IListener {
 
     init {
+        @Suppress("LeakingThis")
+        init()
         register()
+    }
+
+    override fun init() {
     }
 
     final override fun register() {

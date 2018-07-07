@@ -1,15 +1,15 @@
 /*
  * © Copyright - Emmanuel Lampe aka. rexlManu 2018.
  */
-package de.rexlmanu.manuapi.spigot.listener
+package de.rexlmanu.manuapi.spigot.permission
 
-import org.bukkit.event.Listener
+import org.bukkit.command.CommandSender
 
 
 /******************************************************************************************
  *    Urheberrechtshinweis
  *    Copyright © Emmanuel Lampe 2018
- *    Erstellt: 05.05.2018 / 16:59
+ *    Erstellt: 07.07.2018 / 07:25
  *
  *    Alle Inhalte dieses Quelltextes sind urheberrechtlich geschützt.
  *    Das Urheberrecht liegt, soweit nicht ausdrücklich anders gekennzeichnet,
@@ -20,14 +20,12 @@ import org.bukkit.event.Listener
  *    bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  ******************************************************************************************/
 
-interface IListener : Cancellable, Listener{
+interface DefaultHasPermission : HasPermission {
 
-    fun register()
+    val permission: String
 
-    fun unregister()
+    fun hasPermission(sender: CommandSender): Boolean
 
-    fun reload()
-
-    fun init()
+    fun hasPermission(sender: CommandSender, lambda: () -> Unit)
 
 }

@@ -25,6 +25,7 @@ import java.nio.file.Files
  * bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  */
 
+@Deprecated("")
 @Suppress("ReplaceGetOrSet")
 open
 class JsonConfig(directory: File, fileName: String) : IConfig {

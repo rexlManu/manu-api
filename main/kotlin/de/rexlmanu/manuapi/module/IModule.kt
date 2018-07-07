@@ -1,15 +1,13 @@
 /*
  * © Copyright - Emmanuel Lampe aka. rexlManu 2018.
  */
-package de.rexlmanu.manuapi.spigot.listener
-
-import org.bukkit.event.Listener
+package de.rexlmanu.manuapi.module
 
 
 /******************************************************************************************
  *    Urheberrechtshinweis
  *    Copyright © Emmanuel Lampe 2018
- *    Erstellt: 05.05.2018 / 16:59
+ *    Erstellt: 07.07.2018 / 08:21
  *
  *    Alle Inhalte dieses Quelltextes sind urheberrechtlich geschützt.
  *    Das Urheberrecht liegt, soweit nicht ausdrücklich anders gekennzeichnet,
@@ -20,14 +18,11 @@ import org.bukkit.event.Listener
  *    bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  ******************************************************************************************/
 
-interface IListener : Cancellable, Listener{
+interface IModule {
 
-    fun register()
+    fun load()
 
-    fun unregister()
+    fun start()
 
-    fun reload()
-
-    fun init()
-
+    fun stop()
 }

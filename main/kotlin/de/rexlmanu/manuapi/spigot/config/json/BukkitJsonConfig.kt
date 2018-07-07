@@ -22,7 +22,7 @@ import java.io.File
  *    öffentlichen Zugänglichmachung oder andere Nutzung
  *    bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  ******************************************************************************************/
-
+@Deprecated("")
 class BukkitJsonConfig(directory: File, fileName: String) : JsonConfig(directory, fileName) {
 
     constructor(directory: String, fileName: String) : this(File(directory), fileName)
