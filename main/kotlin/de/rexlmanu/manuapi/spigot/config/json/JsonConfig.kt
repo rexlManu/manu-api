@@ -11,8 +11,6 @@ import java.io.File
 import java.io.FileWriter
 import java.nio.file.Files
 
-@Suppress("ReplaceGetOrSet")
-open
 /******************************************************************************************
  * Urheberrechtshinweis
  * Copyright © Emmanuel Lampe 2018
@@ -27,6 +25,8 @@ open
  * bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  */
 
+@Suppress("ReplaceGetOrSet")
+open
 class JsonConfig(directory: File, fileName: String) : IConfig {
 
     constructor(directory: String, fileName: String) : this(File(directory), fileName)

@@ -1,18 +1,13 @@
 /*
  * © Copyright - Emmanuel Lampe aka. rexlManu 2018.
  */
-package de.rexlmanu.manuapi.spigot.builder
-
-import de.rexlmanu.manuapi.kotlin.interfaces.Builder
-import org.bukkit.entity.Player
-import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
+package de.rexlmanu.manuapi.database
 
 
 /******************************************************************************************
  *    Urheberrechtshinweis
  *    Copyright © Emmanuel Lampe 2018
- *    Erstellt: 05.05.2018 / 18:07
+ *    Erstellt: 07.07.2018 / 06:59
  *
  *    Alle Inhalte dieses Quelltextes sind urheberrechtlich geschützt.
  *    Das Urheberrecht liegt, soweit nicht ausdrücklich anders gekennzeichnet,
@@ -23,17 +18,11 @@ import org.bukkit.inventory.ItemStack
  *    bedarf der ausdrücklichen, schriftlichen Zustimmung von Emmanuel Lampe.
  ******************************************************************************************/
 
-interface IInvetoryBuilder : Builder<Inventory> {
+interface SimpleDatabaseAuthentication : SimpleDatabase {
 
-    fun fillGlass()
+    val username: String
+    val password: String
 
-    fun addItem(itemStack: ItemStack)
+    fun authenticate()
 
-    fun replaceWith(itemStack: ItemStack)
-
-    fun setItem(slot: Int, itemStack: ItemStack)
-
-    fun setItem(x: Int, y: Int, itemStack: ItemStack)
-
-    fun openInventory(player: Player)
 }

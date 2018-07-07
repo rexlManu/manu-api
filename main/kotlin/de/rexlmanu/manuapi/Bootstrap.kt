@@ -3,8 +3,6 @@
  */
 package de.rexlmanu.manuapi
 
-import java.awt.TrayIcon
-import javax.swing.JFrame
 import javax.swing.JOptionPane
 
 /******************************************************************************************
@@ -25,7 +23,7 @@ fun main(args: Array<String>) {
     JOptionPane.showMessageDialog(
             null,
             "Dies ist eine Programmierschnittstelle!\nProgrammiert von rexlManu.\nTwitter: @rexlManu",
-            "Information",
+            "ManuAPI",
             1
     )
 }
